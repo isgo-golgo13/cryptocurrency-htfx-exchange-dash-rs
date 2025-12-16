@@ -1,11 +1,90 @@
-# Cryptocurrency HFTx Exchange Dash (Rust)
-High-Frequency Trading Exchange Cryptocurrency Tx Service w/ Dash using Rust, Rust Tokio Asyc, Leptos WASM and Canvas.
+# Cryptocurrency Tx Exchange Dash (Rust)
+Trading Exchange Cryptocurrency Tx Service w/ Dash using Rust, Rust Tokio Asyc, Leptos WASM and Canvas.
+
+```
+██████╗ ████████╗ ██████╗    ██████╗  █████╗ ███████╗██╗  ██╗
+██╔══██╗╚══██╔══╝██╔════╝    ██╔══██╗██╔══██╗██╔════╝██║  ██║
+██████╔╝   ██║   ██║         ██║  ██║███████║███████╗███████║
+██╔══██╗   ██║   ██║         ██║  ██║██╔══██║╚════██║██╔══██║
+██████╔╝   ██║   ╚██████╗    ██████╔╝██║  ██║███████║██║  ██║
+╚═════╝    ╚═╝    ╚═════╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+```
+
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         BROWSER (WASM Runtime)                          │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                       dash-app (Leptos CSR)                       │  │
+│  │  ┌─────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │  │
+│  │  │ dash-state  │  │dash-websocket│  │    dash-components       │  │  │
+│  │  │  (Signals)  │◄─┤    (gloo)    │  │    (Leptos Views)        │  │  │
+│  │  └──────┬──────┘  └──────┬───────┘  └───────────┬──────────────┘  │  │
+│  │         │                │                      │                 │  │
+│  │         └────────────────┼──────────────────────┘                 │  │
+│  │                          │                                        │  │
+│  │              ┌───────────▼────────────┐                           │  │
+│  │              │       dash-charts      │                           │  │
+│  │              │   (SVG/Canvas Render)  │                           │  │
+│  │              │      + chartkit.rs     │                           │  │
+│  │              └───────────┬────────────┘                           │  │
+│  │                          │                                        │  │
+│  │              ┌───────────▼────────────┐                           │  │
+│  │              │        dash-core       │                           │  │
+│  │              │     (Domain Types)     │                           │  │
+│  │              └────────────────────────┘                           │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────┘
+                               │ WebSocket
+                               ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       SERVER (dash-server)                              │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐   │
+│  │    Axum Router   │  │  WS Broadcaster  │  │   Mock Data Engine   │   │
+│  └──────────────────┘  └──────────────────┘  └──────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## Crate Dependency Graph
+
+```
+dash-app
+├── dash-components
+│   ├── dash-charts ──► dash-core
+│   ├── dash-state ───► dash-core  
+│   └── dash-core
+├── dash-websocket
+│   ├── dash-state
+│   └── dash-core
+└── dash-state
+    └── dash-core
+```
+
+
+## Design System
+
+### Color Palette (Trading Terminal Aesthetic)
+
+| Variable           | Hex       | Usage                    |
+|--------------------|-----------|--------------------------|
+| `--bg-void`        | `#0a0a0a` | Primary background       |
+| `--bg-panel`       | `#141414` | Panel backgrounds        |
+| `--bg-elevated`    | `#1a1a1a` | Elevated surfaces        |
+| `--border-subtle`  | `#2a2a2a` | Subtle borders           |
+| `--text-primary`   | `#fafafa` | Primary text             |
+| `--text-muted`     | `#888888` | Muted text               |
+| `--accent-bull`    | `#22c55e` | Buy/Bull (green)         |
+| `--accent-bear`    | `#ef4444` | Sell/Bear (red)          |
+| `--accent-warn`    | `#fbbf24` | Warnings/Highlights      |
+| `--accent-info`    | `#e5e5e5` | Neutral info (light grey)|
 
 
 ## Project Structure
 
 ```shell
-crytptocurrency-htfx-exchange-dash-rs/
+crytptocurrency-tx-exchange-dash-rs/
 ├── Cargo.toml                          # Workspace manifest
 ├── README.md                           # Docs + Firecracker migration path
 │
@@ -77,3 +156,139 @@ crytptocurrency-htfx-exchange-dash-rs/
     └── css/
         └── theme.css                   
 ```
+
+
+
+---
+
+## Quick Start (MacOS)
+
+### Prerequisites
+
+```bash
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Add WASM target
+rustup target add wasm32-unknown-unknown
+
+# Install Trunk (WASM bundler)
+cargo install trunk
+
+# Install cargo-watch for hot reload
+cargo install cargo-watch
+```
+
+### Run Development
+
+```bash
+# Terminal 1: Backend WebSocket server
+cd server/dash-server
+cargo run
+
+# Terminal 2: Frontend with hot reload
+cd crates/dash-app
+trunk serve --open
+```
+
+Dashboard: `http://127.0.0.1:8080`
+
+
+
+### Production Build
+
+```bash
+cd crates/dash-app
+trunk build --release
+# Output: crates/dash-app/dist/
+```
+
+---
+
+## Transition Path: Firecracker on Linux
+
+> ⚠️ **Firecracker requires KVM** — Linux ONLY
+
+### Architecture Overview
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                 Linux Host (AWS EC2, bare metal)                 │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │                    Firecracker MicroVM                     │  │
+│  │  ┌──────────────────────────────────────────────────────┐  │  │
+│  │  │               dash-server (Axum)                     │  │  │
+│  │  │          WebSocket + Static File Server              │  │  │
+│  │  └──────────────────────────────────────────────────────┘  │  │
+│  │  ┌──────────────────────────────────────────────────────┐  │  │
+│  │  │             dist/ (WASM bundle)                      │  │  │
+│  │  │          index.html + *.wasm + *.js                  │  │  │
+│  │  └──────────────────────────────────────────────────────┘  │  │
+│  └────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### Step 1: Build Static Binary
+
+```bash
+# Cross-compile for musl (static linking)
+rustup target add x86_64-unknown-linux-musl
+
+cd server/dash-server
+RUSTFLAGS='-C target-feature=+crt-static' \
+cargo build --release --target x86_64-unknown-linux-musl
+```
+
+### Step 2: Create Root Filesystem
+
+```bash
+# Create minimal Alpine rootfs
+mkdir -p /tmp/rootfs
+docker export $(docker create alpine:3.19) | tar -C /tmp/rootfs -xf -
+
+# Copy binary and WASM dist
+cp target/x86_64-unknown-linux-musl/release/dash-server /tmp/rootfs/usr/bin/
+cp -r crates/dash-app/dist /tmp/rootfs/var/www/
+
+# Create ext4 image
+dd if=/dev/zero of=rootfs.ext4 bs=1M count=256
+mkfs.ext4 rootfs.ext4
+mkdir -p /mnt/rootfs
+mount rootfs.ext4 /mnt/rootfs
+cp -a /tmp/rootfs/* /mnt/rootfs/
+umount /mnt/rootfs
+```
+
+### Step 3: Start Firecracker
+
+```bash
+# Create tap device
+sudo ip tuntap add tap0 mode tap
+sudo ip addr add 172.16.0.1/24 dev tap0
+sudo ip link set tap0 up
+
+# Start Firecracker
+sudo firecracker \
+    --api-sock /tmp/firecracker.sock \
+    --config-file deploy/firecracker/vm-config.json
+
+# VM accessible at 172.16.0.2:3000
+```
+
+### Alternative: WASM Runtime in Firecracker
+
+For edge compute / server-side WASM:
+
+```bash
+# In Firecracker VM
+curl https://wasmtime.dev/install.sh -sSf | bash
+
+# Compile as WASI target
+rustup target add wasm32-wasip1
+cargo build --target wasm32-wasip1 --release
+
+# Run in wasmtime
+wasmtime --dir=. target/wasm32-wasip1/release/dash_app.wasm
+```
+
+---

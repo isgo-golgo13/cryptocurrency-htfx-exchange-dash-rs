@@ -1,0 +1,52 @@
+version: '3.8'
+
+# BTC Exchange Dashboard - Docker Compose
+# 
+# Usage:
+#   docker-compose up -d          # Start all services
+#   docker-compose logs -f        # Follow logs
+#   docker-compose down           # Stop all services
+
+services:
+  # WebSocket Server (Axum)
+  server:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.server-end
+    container_name: btc-dash-server
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - RUST_LOG=dash_server=info,tower_http=debug
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - btc-dash-network
+
+  # Frontend (Nginx + WASM)
+  frontend:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.frontend
+    container_name: btc-dash-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - btc-dash-network
+
+networks:
+  btc-dash-network:
+    driver: bridge
+
+# Optional: Persistent volumes for logs
+# volumes:
+#   server-logs:

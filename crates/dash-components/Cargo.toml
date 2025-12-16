@@ -1,0 +1,22 @@
+[package]
+name = "dash-components"
+version = "0.1.0"
+edition = "2024"
+authors = ["EngineVector <tomas@enginevector.com>"]
+license = "MIT"
+repository = "https://github.com/enginevector/btc-exchange-dash"
+description = "Leptos UI components for BTC Exchange Dashboard"
+
+[dependencies]
+dash-core = { path = "../dash-core" }
+dash-state = { path = "../dash-state" }
+dash-charts = { path = "../dash-charts" }
+
+# Leptos
+leptos = { version = "0.7", features = ["csr"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde", "wasm-bindgen"] }
+
+# Logging
+tracing = "0.1"

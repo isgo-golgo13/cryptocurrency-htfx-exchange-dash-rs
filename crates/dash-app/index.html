@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Real-time Bitcoin exchange transaction dashboard">
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <title>BTC Exchange Dashboard</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Theme CSS -->
+    <link data-trunk rel="css" href="../../static/css/theme.css">
+    
+    <!-- WASM App -->
+    <link data-trunk rel="rust" data-wasm-opt="z" data-bin="dash-app">
+    
+    <style>
+        /* Critical CSS - inline for faster first paint */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0a0a;
+            color: #fafafa;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+        
+        #app {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Loading spinner */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            gap: 1rem;
+        }
+        
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #2a2a2a;
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            color: #888888;
+            font-size: 14px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Hide loading once WASM is ready */
+        .hydrated .loading {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Loading state shown until WASM hydrates -->
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading BTC Exchange Dashboard...</div>
+        </div>
+    </div>
+    
+    <noscript>
+        <div style="padding: 2rem; text-align: center; color: #fafafa;">
+            <h1>JavaScript Required</h1>
+            <p>This application requires JavaScript and WebAssembly to run.</p>
+        </div>
+    </noscript>
+</body>
+</html>

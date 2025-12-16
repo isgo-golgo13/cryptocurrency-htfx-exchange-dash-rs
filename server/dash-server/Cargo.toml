@@ -1,0 +1,41 @@
+[package]
+name = "dash-server"
+version = "0.1.0"
+edition = "2024"
+authors = ["EngineVector <tomas@enginevector.com>"]
+license = "MIT"
+repository = "https://github.com/enginevector/btc-exchange-dash"
+description = "WebSocket server with mock data for BTC Exchange Dashboard"
+
+[[bin]]
+name = "dash-server"
+path = "src/main.rs"
+
+[dependencies]
+dash-core = { path = "../../crates/dash-core" }
+
+# Async runtime
+tokio = { version = "1.40", features = ["full"] }
+futures = "0.3"
+
+# Web framework
+axum = { version = "0.7", features = ["ws"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "fs", "trace"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Random for mock data
+rand = "0.8"
+
+# UUID
+uuid = { version = "1.10", features = ["v4"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

@@ -1,5 +1,5 @@
 # Cryptocurrency Tx Exchange Dash (Rust)
-Trading Exchange Cryptocurrency (BTC) Tx Service w/ Dash UI using Rust, Rust Tokio Asyc, Leptos WASM and Canvas.
+Trading Exchange Cryptocurrency (BTC) Tx Service w/ Dash UI using Rust, Rust Tokio Asyc, Rust Leptos WASM Toolkit and Canvas.
 
 ```
 ██████╗ ████████╗ ██████╗    ██████╗  █████╗ ███████╗██╗  ██╗

@@ -203,6 +203,81 @@ trunk build --release
 # Output: crates/dash-app/dist/
 ```
 
+
+### Using Project Makefile
+```shell
+# Unzip and enter project
+unzip btc-exchange-dash-complete.zip
+cd btc-exchange-dash
+
+# Install dependencies (one time)
+make install-deps
+
+# Build everything
+make build
+
+# See what happens
+make help
+```
+
+---
+
+### Makefile Commands
+
+```shell
+BTC Exchange Dashboard
+======================
+
+Setup:
+  install-deps       Install all dependencies
+  install-wasm       Install WASM target
+  install-trunk      Install trunk bundler
+
+Development:
+  dev                Start development environment (server + frontend)
+  server             Run backend server
+  frontend           Run frontend dev server
+  watch-server       Run server with auto-reload
+  watch-frontend     Run frontend with hot reload
+
+Build:
+  build              Build all crates (debug)
+  release            Build optimized release
+  build-server       Build server only
+  build-frontend     Build WASM frontend
+  build-static       Build static server binary (musl)
+
+Quality:
+  test               Run all tests
+  fmt                Format code
+  lint               Run clippy lints
+  check              Quick check (no codegen)
+  ci                 Run all CI checks
+
+Deploy:
+  docker             Build and run Docker containers
+  docker-build       Build Docker images
+  firecracker-build  Build for Firecracker
+
+Cleanup:
+  clean              Clean build artifacts
+  clean-all          Clean everything
+```
+
+### Run the BTC Dash UI 
+
+```shell
+# Terminal 1
+make server
+
+# Terminal 2
+make frontend
+```
+
+Then open http://127.0.0.1:8080 and see the trading dashboard with mock BTC data streaming in real-time.
+
+
+
 ---
 
 ## Transition Path: Firecracker on Linux

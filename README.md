@@ -1,5 +1,5 @@
 # Cryptocurrency Tx Exchange Dash (Rust)
-Trading Exchange Cryptocurrency Tx Service w/ Dash using Rust, Rust Tokio Asyc, Leptos WASM and Canvas.
+Trading Exchange Cryptocurrency (BTC) Tx Service w/ Dash UI using Rust, Rust Tokio Asyc, Leptos WASM and Canvas.
 
 ```
 ██████╗ ████████╗ ██████╗    ██████╗  █████╗ ███████╗██╗  ██╗
@@ -207,7 +207,7 @@ trunk build --release
 
 ## Transition Path: Firecracker on Linux
 
-> ⚠️ **Firecracker requires KVM** — Linux ONLY
+> **Firecracker requires KVM** — Linux ONLY
 
 ### Architecture Overview
 

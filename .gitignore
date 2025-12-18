@@ -14,3 +14,6 @@ target
 **/mutants.out*/
 
 .DS_Store
+dist/
+crates/dash-app/dist/
+*.wasm

@@ -45,7 +45,7 @@ struct DepthState {
 /// Depth chart component
 #[component]
 pub fn DepthChart(
-    #[prop(into)] depth: Signal<Option<MarketDepth>>,
+    depth: RwSignal<Option<MarketDepth>>,
     #[prop(optional)] config: Option<DepthChartConfig>,
 ) -> impl IntoView {
     let config = config.unwrap_or_default();

@@ -2,27 +2,16 @@
 target = "index.html"
 dist = "dist"
 filehash = true
-minify = "on_release"
 
 [watch]
-watch = ["src", "index.html", "../../static"]
-ignore = ["dist", "target"]
+watch = ["src", "index.html"]
 
 [serve]
 address = "127.0.0.1"
 port = 8080
-open = false
-no_autoreload = false
+open = true
 
 [[proxy]]
 backend = "http://127.0.0.1:3001/ws"
 rewrite = "/ws"
 ws = true
-
-[tools]
-wasm_bindgen = "0.2"
-wasm_opt = "version_118"
-
-[hooks]
-# Copy static assets to dist
-post_build = "cp -r ../../static/css dist/"

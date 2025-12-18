@@ -1,7 +1,7 @@
 //! Main dashboard layout component
 
 use dash_charts::{CandlestickChart, DepthChart};
-use dash_state::{use_app_state, Panel};
+use dash_state::use_app_state;
 use leptos::prelude::*;
 
 use crate::{OrderBook, TickerBar, TradeHistory};
@@ -9,13 +9,18 @@ use crate::{OrderBook, TickerBar, TradeHistory};
 #[component]
 pub fn Dashboard() -> impl IntoView {
     let state = use_app_state();
+    
+    // Extract signals for charts
+    let candles = state.market.candles;
+    let depth = state.market.depth;
+    let connection = state.connection;
 
     view! {
         <div class="dashboard">
             <header class="dash-header">
                 <TickerBar
                     market=state.market.clone()
-                    connection=Signal::from(state.connection)
+                    connection=connection
                 />
             </header>
 
@@ -37,7 +42,7 @@ pub fn Dashboard() -> impl IntoView {
                             <span class="panel-title">"Chart"</span>
                         </div>
                         <div class="panel-content">
-                            <CandlestickChart candles=state.market.candles.into() />
+                            <CandlestickChart candles=candles />
                         </div>
                     </div>
 
@@ -46,7 +51,7 @@ pub fn Dashboard() -> impl IntoView {
                             <span class="panel-title">"Market Depth"</span>
                         </div>
                         <div class="panel-content">
-                            <DepthChart depth=state.market.depth.into() />
+                            <DepthChart depth=depth />
                         </div>
                     </div>
                 </section>

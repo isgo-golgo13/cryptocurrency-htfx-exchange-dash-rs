@@ -59,7 +59,7 @@ struct ChartState {
 /// Candlestick chart component
 #[component]
 pub fn CandlestickChart(
-    #[prop(into)] candles: Signal<CandleHistory>,
+    candles: RwSignal<CandleHistory>,
     #[prop(optional)] config: Option<CandlestickConfig>,
 ) -> impl IntoView {
     let config = config.unwrap_or_default();
